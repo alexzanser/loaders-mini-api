@@ -7,6 +7,7 @@ import (
 )
 
 type Response struct {
+	Success		bool			`json:"success, omitempty"`
 	Result 		string 			`json:"result,omitempty"`
 	HttpStatus 	int 			`json:"status_code,omitempty"`
 	ID			int64			`json:"id,omitempty"`

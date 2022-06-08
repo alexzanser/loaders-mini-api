@@ -22,7 +22,7 @@ const (
 	getLoaderQuery 			= "SELECT id, username, passwd_hash, max_weight, drunk, fatigue, salary, balance FROM loaders WHERE username=$1"
 	getCompletedTasksQuery  = "SELECT id, name, weight FROM tasks WHERE loader_id=$1 and completed=true";
 	getLoadersListQuery		= "SELECT  id, username, max_weight, salary FROM loaders;"
-	loadersUpdateQuery		= ""
+	loadersUpdateQuery		= "INSERT INTO loaders (fatigue, balance) VALUES ($1, $2) WHERE id=$3;"
 )
 
 func (c *loaderRepo) GetLoader(ctx context.Context, username, passwd string) (*models.Loader, error) {
@@ -110,3 +110,25 @@ func (c *loaderRepo) GetLoadersList(ctx context.Context) ([]models.Loader, error
 	return ld, nil
 }
 
+func (t *loaderRepo) UpdateLoader(ctx context.Context, ld *models.Loader) (error) {
+	tx, err := t.pool.Begin(ctx)
+	if err != nil {
+		return fmt.Errorf("error initialising transaction: %w", err)
+	}
+	defer func() { _ = tx.Rollback(ctx) }()
+
+	res, err := tx.Exec(ctx, createTaskQuery, ld.Fatigue + 20, ld.Balance + ld.Salary, ld.ID)
+	if err != nil {
+		return fmt.Errorf("error adding data to database: %w", err)
+	}
+
+	if res.RowsAffected() == 0 {
+		return fmt.Errorf("no rows were affected")
+	}
+
+	if err := tx.Commit(ctx); err != nil {
+		return fmt.Errorf("error commiting transaction: %w", err)
+	}
+
+	return nil
+}

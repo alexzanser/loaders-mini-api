@@ -49,5 +49,11 @@ func (c *customerService) Start(ctx context.Context, loadersID []int64, username
 	ct.Balance -= totalCost
 	c.repo.CompleteTask(ctx, &task)
 
-	
+	for _, ld := range choosenLoaders {
+		if err := c.repo.UpdateLoader(ctx, &ld); err != nil {
+			return false, fmt.Errorf("error when update loaders:%v" , err)
+		}
+	}
+
+	return true, nil
 }

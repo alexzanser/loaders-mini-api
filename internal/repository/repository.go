@@ -15,6 +15,7 @@ type Customer interface{
 type Loader interface{
 	GetLoader(ctx context.Context, username, passwd string) (*models.Loader, error)
 	GetLoadersList(ctx context.Context) ([]models.Loader, error) 
+	UpdateLoader(ctx context.Context, ld *models.Loader) (error) 
 }
 
 type Registration interface {

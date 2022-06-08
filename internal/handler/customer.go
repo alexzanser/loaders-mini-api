@@ -73,18 +73,19 @@ func (c *customerHandler) Start(w http.ResponseWriter, req *http.Request) {
 		http.Error(w, fmt.Sprintf("can't retreive username from context"), http.StatusBadRequest)
 		return
 	}
-	role, ok := req.Context().Value("username").(string)
+	role, ok := req.Context().Value("role").(string)
 	if ok == false {
 		http.Error(w, fmt.Sprintf("can't retreive role from context"), http.StatusBadRequest)
 		return
 	}
 
 	if role != "customer" {
-			http.Error(w, fmt.Sprintf(`{"\start is only for customers":`), http.StatusUnauthorized)
+			http.Error(w, fmt.Sprintf(`{"/start is only for customers":`), http.StatusUnauthorized)
 			return
 	}
 
 	loadersStr := req.PostFormValue("loaders")
+	fmt.Println(req)
 	loadersID := make([]int64, 0)
 	for _, val := range strings.Split(loadersStr, ",") {
 		v, err := strconv.Atoi(val)
@@ -94,7 +95,15 @@ func (c *customerHandler) Start(w http.ResponseWriter, req *http.Request) {
 		}
 		loadersID = append(loadersID, int64(v))
 	}
-	
-	c.service.Start(context.TODO(), loadersID, username, "")
+	rp := Response {
+		Success: true,
+		Result: "Congratulations!You win!",
+	}
+	_, err := c.service.Start(context.TODO(), loadersID, username, "")
+	if err != nil {
+		rp.Success = false
+		rp.Result = "Game failed!"
+	}
+
 	renderResponse(w, rp)
 }
