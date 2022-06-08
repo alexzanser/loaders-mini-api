@@ -13,13 +13,13 @@ CREATE TABLE IF NOT EXISTS loaders (
     drunk               boolean,
     fatigue             integer,
     salary              integer,
-    balance             integer DEFAULT 0
+    balance             integer,
+    completed_tasks     integer[]
 );
 
 CREATE TABLE IF NOT EXISTS tasks (
     id                  SERIAL  PRIMARY KEY,
     customer_id         integer REFERENCES customers ON DELETE CASCADE,
-    loader_id           integer REFERENCES loaders ON DELETE CASCADE,
     name                varchar NOT NULL,
     weight              integer,
     completed           boolean DEFAULT false

@@ -8,13 +8,13 @@ import (
 type Loader struct {
 	ID				int64
 	Username		string
-	Passwd			string
-	PasswdHash		string
+	Passwd			string	`json:"password,omitempty"`
+	PasswdHash		string	`json:"password_hash,omitempty"`
 	MaxWeight		int
-	Drunk			bool
-	Fatigue			int
+	Drunk			bool	`json:"drunk,omitempty"`
+	Fatigue			int		`json:"fatigue,omitempty"`
 	Salary			int
-	Balance			int
+	Balance			int		`json:"balance,omitempty"`
 	CompletedTasks	[]Task
 }
 

@@ -18,8 +18,8 @@ func newTaskRepo(pool *pgxpool.Pool) *taskRepo{
 }
 
 const (
-	createTaskQuery = "INSERT INTO tasks (customer_id, name, weight) VALUES ($1, $2, $3);"
-	completeTaskQuery = "INSERT INTO tasks (completed) VALUES ($1) WHERE id=$2;"
+	createTaskQuery 	= "INSERT INTO tasks (customer_id, name, weight) VALUES ($1, $2, $3);"
+	completeTaskQuery 	= "UPDATE tasks SET completed=$1 WHERE id=$2;"
 )
 
 func (t *taskRepo) CreateTask(ctx context.Context, userID int64, task *models.Task) (error) {

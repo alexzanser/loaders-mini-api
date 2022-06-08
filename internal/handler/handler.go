@@ -69,7 +69,7 @@ func (h *handler) Routes() chi.Router {
 	})
 
 	r.Route("/start", func(r chi.Router) {
-		r.With(h.authorizationHandler.Authorize).Get("/", h.customerHandler.Start)
+		r.With(h.authorizationHandler.Authorize).Post("/", h.customerHandler.Start)
 	})
 
 	return r

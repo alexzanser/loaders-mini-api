@@ -24,16 +24,17 @@ func (a *authorizationHandler) Authorize(next http.Handler) http.Handler {
 			http.Error(w, fmt.Sprintf(`{"error": "%v"}`, err.Error()), http.StatusUnauthorized)
 			return
 		}
-			
+
+
 		username, role, err  := parseToken(token)
 		if err != nil || role != "loader" && role != "customer" {
 			http.Error(w, fmt.Sprintf(`{"error": "%v"}`, err.Error()), http.StatusUnauthorized)
 			return
 		}
-
-		ctx := context.WithValue(req.Context(), "username", username)
+		ctx := context.WithValue(context.TODO(), "username", username)
 		ctx	= context.WithValue(ctx, "role", role)
 		req = req.WithContext(ctx)
+
 		next.ServeHTTP(w, req)
 	})
 }

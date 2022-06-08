@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/binary"
 	"fmt"
+	"log"
 	"loaders/internal/service"
 	"net/http"
 )
@@ -18,6 +19,8 @@ func newTasksHandler(service *service.Service) *tasksHandler {
 }
 
 func (t *tasksHandler) GenerateRandomTasks(w http.ResponseWriter, req *http.Request) {
+	log.Printf("handling generate random tasks at %s\n", req.URL.Path)
+
 	id, err := t.service.GenerateRandomTasks(context.TODO())
 	if err != nil {
 		http.Error(w, fmt.Sprintf(`{"error": "%v"}`, err.Error()), http.StatusBadRequest)

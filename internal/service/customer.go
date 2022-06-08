@@ -26,7 +26,7 @@ func (c *customerService) Start(ctx context.Context, loadersID []int64, username
 	}
 
 	task := ct.Tasks[0]
-	allLoaders, err := c.repo.GetLoadersList(ctx)
+	allLoaders, err := c.repo.GetLoadersFull(ctx)
 	if err != nil {
 		return false, fmt.Errorf("error when get loaders for task:%v", err)
 	}
@@ -35,6 +35,9 @@ func (c *customerService) Start(ctx context.Context, loadersID []int64, username
 	totalWeight := 0
 	for _, ld := range allLoaders {
 		choosenLoaders = append(choosenLoaders, ld)
+	}
+
+	for _, ld := range choosenLoaders {
 		totalCost += ld.Salary
 		totalWeight += ld.MaxWeight
 	}
@@ -47,13 +50,13 @@ func (c *customerService) Start(ctx context.Context, loadersID []int64, username
 	}
 
 	ct.Balance -= totalCost
+	c.repo.UpdateCustomer(ctx, totalCost, ct)
 	c.repo.CompleteTask(ctx, &task)
-
 	for _, ld := range choosenLoaders {
+		ld.CompletedTasks = append(ld.CompletedTasks, task)
 		if err := c.repo.UpdateLoader(ctx, &ld); err != nil {
 			return false, fmt.Errorf("error when update loaders:%v" , err)
 		}
 	}
-
 	return true, nil
 }

@@ -7,7 +7,6 @@ import (
 )
 
 type Response struct {
-	Success		bool			`json:"success, omitempty"`
 	Result 		string 			`json:"result,omitempty"`
 	HttpStatus 	int 			`json:"status_code,omitempty"`
 	ID			int64			`json:"id,omitempty"`
@@ -17,7 +16,7 @@ type Response struct {
 	Loaders		[]models.Loader	`json:"loaders,omitempty"`
 	Tasks	  	[]models.Task	`json:"tasks,omitempty"`
 	Token		string			`json:"token,omitempty"`
-	Salary		int				`json:"salary,omitempry"`
+	Salary		int				`json:"salary,omitempty"`
 	Weight		int				`json:"weight,omitempty"`
 	Fatigue		int				`json:"fatigue,omitempty"`
 	Drunk		bool			`json:"drunk,omitempty"`

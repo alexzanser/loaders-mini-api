@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"log"
 )
 
 type customerHandler struct {
@@ -18,6 +19,8 @@ func newCustomerHandler(service *service.Service) *customerHandler {
 }
 
 func (c *customerHandler) GetCustomer(w http.ResponseWriter, req *http.Request) {
+	log.Printf("handling get customer at %s\n", req.URL.Path)
+
 	username, ok := req.Context().Value("username").(string)
 	if ok == false {
 		http.Error(w, fmt.Sprintf("can't retreive username from context"), http.StatusBadRequest)
@@ -30,6 +33,7 @@ func (c *customerHandler) GetCustomer(w http.ResponseWriter, req *http.Request) 
 		return
 	}
 	ld, err := c.service.GetLoadersList(req.Context())
+	
 	if err != nil {
 		http.Error(w, fmt.Sprintf("error when get loaders list :%v", err), http.StatusInternalServerError)
 		return
@@ -44,6 +48,8 @@ func (c *customerHandler) GetCustomer(w http.ResponseWriter, req *http.Request) 
 }
 
 func (c *customerHandler) GetCustomerTasks(w http.ResponseWriter, req *http.Request) {
+	log.Printf("handling get customer tasks at %s\n", req.URL.Path)
+
 	username, ok := req.Context().Value("username").(string)
 	if ok == false {
 		http.Error(w, fmt.Sprintf("can't retreive username from context"), http.StatusBadRequest)
@@ -68,6 +74,8 @@ func (c *customerHandler) GetCustomerTasks(w http.ResponseWriter, req *http.Requ
 }
 
 func (c *customerHandler) Start(w http.ResponseWriter, req *http.Request) {
+	log.Printf("handling start at %s\n", req.URL.Path)
+
 	username, ok := req.Context().Value("username").(string)
 	if ok == false {
 		http.Error(w, fmt.Sprintf("can't retreive username from context"), http.StatusBadRequest)
@@ -84,8 +92,13 @@ func (c *customerHandler) Start(w http.ResponseWriter, req *http.Request) {
 			return
 	}
 
+	err := req.ParseForm()
+	if err != nil {
+		http.Error(w, fmt.Sprintf(`{"invalid request": %v`, err), http.StatusBadRequest)
+			return
+	}
+
 	loadersStr := req.PostFormValue("loaders")
-	fmt.Println(req)
 	loadersID := make([]int64, 0)
 	for _, val := range strings.Split(loadersStr, ",") {
 		v, err := strconv.Atoi(val)
@@ -96,13 +109,12 @@ func (c *customerHandler) Start(w http.ResponseWriter, req *http.Request) {
 		loadersID = append(loadersID, int64(v))
 	}
 	rp := Response {
-		Success: true,
 		Result: "Congratulations!You win!",
 	}
-	_, err := c.service.Start(context.TODO(), loadersID, username, "")
+	_, err = c.service.Start(context.TODO(), loadersID, username, "")
 	if err != nil {
-		rp.Success = false
 		rp.Result = "Game failed!"
+		rp.Role = err.Error()
 	}
 
 	renderResponse(w, rp)

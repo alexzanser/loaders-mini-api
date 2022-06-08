@@ -10,11 +10,13 @@ import (
 type Customer interface{
 	GetCustomer(ctx context.Context, username, passwd string) (*models.Customer, error)
 	GetCustomersList(ctx context.Context) ([]int64, error)
+	UpdateCustomer(ctx context.Context, taskCost int, ct *models.Customer) (error)
 }
 
 type Loader interface{
 	GetLoader(ctx context.Context, username, passwd string) (*models.Loader, error)
 	GetLoadersList(ctx context.Context) ([]models.Loader, error) 
+	GetLoadersFull(ctx context.Context) ([]models.Loader, error)
 	UpdateLoader(ctx context.Context, ld *models.Loader) (error) 
 }
 

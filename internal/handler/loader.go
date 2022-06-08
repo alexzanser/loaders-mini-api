@@ -4,6 +4,7 @@ import (
 	"loaders/internal/service"
 	"net/http"
 	"fmt"
+	"log"
 )
 
 type loaderHandler struct {
@@ -15,6 +16,8 @@ func newLoaderHandler(service *service.Service) *loaderHandler {
 }
 
 func (c *loaderHandler) GetLoader(w http.ResponseWriter, req *http.Request) {
+	log.Printf("handling get loader at %s\n", req.URL.Path)
+
 	username, ok := req.Context().Value("username").(string)
 	if ok == false {
 		http.Error(w, fmt.Sprintf("can't retreive username from context"), http.StatusBadRequest)
@@ -39,6 +42,8 @@ func (c *loaderHandler) GetLoader(w http.ResponseWriter, req *http.Request) {
 }
 
 func (c *loaderHandler) GetLoaderTasks(w http.ResponseWriter, req *http.Request) {
+	log.Printf("handling get loader at %s\n", req.URL.Path)
+
 	username, ok := req.Context().Value("username").(string)
 	if ok == false {
 		http.Error(w, fmt.Sprintf("can't retreive username from context"), http.StatusBadRequest)
