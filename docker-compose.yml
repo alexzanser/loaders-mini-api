@@ -1,0 +1,38 @@
+version: "3.3"
+
+services:  
+  loaders:
+    depends_on:
+      - postgres
+    build: .  
+    container_name: 
+      loaders
+    networks:
+      - backend
+    hostname: loaders
+    ports:
+      - "8080:8080"
+    restart: on-failure
+
+  postgres: 
+    container_name:
+      db
+    image: 
+      postgres:14
+    environment:
+      - POSTGRES_DB=loaders
+      - POSTGRES_USER=user_go
+      - POSTGRES_PASSWORD=8956_go
+    ports:
+      - "5422:5432"
+    volumes:
+      - mydata:/home/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql 
+    networks:
+      - backend
+
+networks:
+  backend:
+
+volumes:
+  mydata:
