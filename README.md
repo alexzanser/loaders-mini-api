@@ -4,7 +4,7 @@
 make build
 
 Зарегистрировать заказчика и залогиниться: 
-```console
+```shell
     make customer_register  
     make customer_login
 ```
