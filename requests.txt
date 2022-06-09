@@ -1,0 +1,3 @@
+curl -d "username=VasyaIvanova&password=1234&role=loader" -H "Authorization: Bearer <user_token>" -X GET http://localhost:8080/me
+
+curl -d "loaders=1,2,3" -H "Authorization: Bearer <customer_token>" -H "Content-Type: application/x-www-form-urlencoded" -X POST http://localhost:8080/start

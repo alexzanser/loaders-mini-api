@@ -23,6 +23,7 @@ func NewLoader() *Loader {
 		MaxWeight: randomLoaderWeight(),
 		Drunk: drunk(),
 		Fatigue: randomFatigue(),
+		Balance: 0,
 		Salary: randomSalary(),
 		CompletedTasks: make([]Task, 0),
 	}
