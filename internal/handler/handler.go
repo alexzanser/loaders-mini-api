@@ -6,6 +6,9 @@ import (
 	"net/http"
 )
 
+/*handler это структура содержащая все объекты типа handler позволяющая
+обрабатывать запросы разного назначения*/
+
 type handler struct {
 	customerHandler			*customerHandler
 	registerHandler			*registerHandler
@@ -15,7 +18,8 @@ type handler struct {
 	loaderHandler			*loaderHandler
 }
 
-func newHandler(service *service.Service) *handler {
+//NewHandler возвращает новый объект типа Handler
+func NewHandler(service *service.Service) *handler {
 	return &handler{
 		customerHandler:		newCustomerHandler(service),
 		loaderHandler:			newLoaderHandler(service),

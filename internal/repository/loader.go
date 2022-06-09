@@ -27,8 +27,8 @@ const (
 	loadersUpdateQuery		= "UPDATE loaders SET  max_weight = $1, fatigue=$2, balance=$3, completed_tasks=completed_tasks || $4 WHERE id=$5;"
 )
 
-func (c *loaderRepo) GetLoader(ctx context.Context, username, passwd string) (*models.Loader, error) {
-	tx, err := c.pool.Begin(ctx)
+func (l *loaderRepo) GetLoader(ctx context.Context, username, passwd string) (*models.Loader, error) {
+	tx, err := l.pool.Begin(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("error initialising transaction: %w", err)
 	}
@@ -38,13 +38,13 @@ func (c *loaderRepo) GetLoader(ctx context.Context, username, passwd string) (*m
 	var ld models.Loader
 	var id	int64
 
-	row := c.pool.QueryRow(ctx, getLoaderQuery, username)
+	row := l.pool.QueryRow(ctx, getLoaderQuery, username)
 	if err := row.Scan(&id, &ld.Username, &ld.PasswdHash, &ld.MaxWeight, 
 						&ld.Drunk, &ld.Fatigue, &ld.Salary, &ld.Balance); err != nil {
 		return nil, fmt.Errorf("error receiving data from database: %w", err)
 	}
 
-	rows, err := c.pool.Query(ctx, getCompletedTasksQuery, id)
+	rows, err := l.pool.Query(ctx, getCompletedTasksQuery, id)
 	if err != nil {
 		return nil, fmt.Errorf("error receiving data from database: %w", err)
 	}
@@ -75,8 +75,8 @@ func (c *loaderRepo) GetLoader(ctx context.Context, username, passwd string) (*m
 	return &ld, nil
 }
 
-func (c *loaderRepo) GetLoadersList(ctx context.Context) ([]models.Loader, error) {
-	tx, err := c.pool.Begin(ctx)
+func (l *loaderRepo) GetLoadersList(ctx context.Context) ([]models.Loader, error) {
+	tx, err := l.pool.Begin(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("error initialising transaction: %w", err)
 	}
@@ -85,7 +85,7 @@ func (c *loaderRepo) GetLoadersList(ctx context.Context) ([]models.Loader, error
 	
 	var ld []models.Loader
 
-	rows, err := c.pool.Query(ctx, getLoadersListQuery)
+	rows, err := l.pool.Query(ctx, getLoadersListQuery)
 	if err != nil {
 		return nil, fmt.Errorf("error receiving data from database: %w", err)
 	}
@@ -112,8 +112,8 @@ func (c *loaderRepo) GetLoadersList(ctx context.Context) ([]models.Loader, error
 }
 
 
-func (c *loaderRepo) GetLoadersFull(ctx context.Context) ([]models.Loader, error) {
-	tx, err := c.pool.Begin(ctx)
+func (l *loaderRepo) GetLoadersFull(ctx context.Context) ([]models.Loader, error) {
+	tx, err := l.pool.Begin(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("error initialising transaction: %w", err)
 	}
@@ -122,7 +122,7 @@ func (c *loaderRepo) GetLoadersFull(ctx context.Context) ([]models.Loader, error
 	
 	var ld []models.Loader
 
-	rows, err := c.pool.Query(ctx, getLoadersFullQuery)
+	rows, err := l.pool.Query(ctx, getLoadersFullQuery)
 	if err != nil {
 		return nil, fmt.Errorf("error receiving data from database: %w", err)
 	}
@@ -148,8 +148,8 @@ func (c *loaderRepo) GetLoadersFull(ctx context.Context) ([]models.Loader, error
 	return ld, nil
 }
 
-func (t *loaderRepo) UpdateLoader(ctx context.Context, ld *models.Loader) (error) {
-	tx, err := t.pool.Begin(ctx)
+func (l *loaderRepo) UpdateLoader(ctx context.Context, ld *models.Loader) (error) {
+	tx, err := l.pool.Begin(ctx)
 	if err != nil {
 		return fmt.Errorf("error initialising transaction: %w", err)
 	}

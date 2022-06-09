@@ -40,8 +40,10 @@ func (a *authorizationHandler) Authorize(next http.Handler) http.Handler {
 			http.Error(w, fmt.Sprintf(`{"error": "%v"}`, err.Error()), http.StatusUnauthorized)
 			return
 		}
-		ctx := context.WithValue(req.Context(), ctxUsernameKey, username)
-		ctx = context.WithValue(ctx, ctxRoleKey, role)
+		
+		//нужно разобраться почему линтер просит поменять тип, из-за этого дальше не читается
+		ctx := context.WithValue(context.TODO(), "username", username)
+		ctx = context.WithValue(ctx, "role", role)
 		req = req.WithContext(ctx)
 
 		next.ServeHTTP(w, req)

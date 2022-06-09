@@ -73,9 +73,9 @@ func (c *customerService) Start(ctx context.Context, loadersID []int64, username
 
 	if len (ct.Tasks) == 0 {
 		return "Game successfully completed! All tasks are done!", nil
-	} else {
-		return "Task finished, congratulations! Still have some tasks to deal with.", nil
 	}
+	
+	return "Task finished, congratulations! Still have some tasks to deal with.", nil
 }
 
 func contains(s []int64, e int64) bool {

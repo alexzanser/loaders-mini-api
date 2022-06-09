@@ -1,5 +1,20 @@
 # loaders mini-game
 
+Структура api:
+    - public:
+        POST    /register   регистрация пользователей
+        POST    /login      логин пользователей
+        POST    /tasks      генерация случайного набора заданий. необходим хотя бы один заказчик
+
+    - заказчики:
+        GET     /me         получение данных о себе  и свободных грузчиках
+        GET     /tasks      получение данных о доступных невыполненных заказах
+        POST    /start      начало игры. необходимы передавать параметр -d "loaders=<loader_id_1>, <loader_id_2>"
+
+    - грузчики:
+        GET     /me         получение данных о себе
+        GET     /tasks      получение данных о доступных выполненных грузчиком заказах
+
 Запуск:  
 ```shell
     make build
@@ -34,6 +49,8 @@
  - начать игру заказчиком, loaders - список id выбранных грузчиков:  
     `curl -d "loaders=1,2,3" -H "Authorization: Bearer <customer_token>" -H "Content-Type: application/x-www-form-urlencoded" -X POST http://localhost:8080/start`
 
+
+Чтобы все очистить придется руками удалить используемые контейнеры и volumes. 
 ---
 
 # мини-игра грузчики

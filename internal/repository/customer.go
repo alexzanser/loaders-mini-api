@@ -106,8 +106,8 @@ func (c *customerRepo) GetCustomersList(ctx context.Context) ([]int64, error) {
 	return idList, nil
 }
 
-func (t *customerRepo) UpdateCustomer(ctx context.Context, taskCost int, ct *models.Customer) (error) {
-	tx, err := t.pool.Begin(ctx)
+func (c *customerRepo) UpdateCustomer(ctx context.Context, taskCost int, ct *models.Customer) (error) {
+	tx, err := c.pool.Begin(ctx)
 	if err != nil {
 		return fmt.Errorf("error initialising transaction: %w", err)
 	}

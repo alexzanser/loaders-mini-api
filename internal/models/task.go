@@ -5,12 +5,14 @@ import (
 	"time"
 )
 
+//Task представляет структуру для задачи
 type Task struct {
 	ID		int64
 	Name	string
 	Weight	int
 }
 
+//NewTask создает новую задачу
 func NewTask() *Task {
 	return &Task{
 		Name: randomTask(),
@@ -18,7 +20,7 @@ func NewTask() *Task {
 	}
 }
 
-var TaskNames = []string{
+var taskNames = []string{
 	"Furniture",
 	"Clothes",
 	"Tools", 
@@ -27,14 +29,16 @@ var TaskNames = []string{
 	"Auto parts",
 }
 
-var MinTaskWeight, MaxTaskWeight = 10, 80
+var (
+	minTaskWeight, maxTaskWeight = 10, 80
+)
 
 func randomTask() string {
 	rand.Seed(time.Now().UnixNano())
-	return  TaskNames[rand.Intn(len(TaskNames))]
+	return  taskNames[rand.Intn(len(taskNames))]
 }
 
 func randomTaskWeight() int {
 	rand.Seed(time.Now().UnixNano())
-	return rand.Intn(MaxTaskWeight - MinTaskWeight) + MinTaskWeight
+	return rand.Intn(maxTaskWeight - minTaskWeight) + minTaskWeight
 }

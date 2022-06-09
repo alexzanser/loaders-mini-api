@@ -51,7 +51,7 @@ func (l *loginHandler) Login(w http.ResponseWriter, req *http.Request) {
 
 	rp := response{
 		Token:      token,
-		Result:     fmt.Sprintf(`{user with username: "%s" and role "%s" authorized}`, username, role),
+		Result:     fmt.Sprintf(`{user with username: %s and role %s authorized}`, username, role),
 		HTTPStatus: http.StatusAccepted,
 	}
 	renderResponse(w, rp)
