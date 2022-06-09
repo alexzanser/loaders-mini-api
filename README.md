@@ -1,6 +1,6 @@
 # loaders mini-game
 
-Структура api:
+Структура api:  
     - public:
         POST    /register   регистрация пользователей
         POST    /login      логин пользователей
