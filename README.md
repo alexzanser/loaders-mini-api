@@ -4,10 +4,10 @@
 make build
 
 Зарегистрировать заказчика и залогиниться: 
-``` 
+```console
     make customer_register  
     make customer_login
-```bash
+```
 
 Зарегистрировать три грузчика и залогиниться ими:  
     make loaders_register  
