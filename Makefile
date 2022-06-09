@@ -30,4 +30,4 @@ stop:
 clean:
 		docker rm loaders db
 
-.PHONY: build, start, stop, clean
+.PHONY: build, start, stop, clean, loaders_register, loaders_login, customer_register, customer_login, generate_tasks
