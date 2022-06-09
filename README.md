@@ -52,7 +52,7 @@
     `curl -d "loaders=1,2,3" -H "Authorization: Bearer <customer_token>" -H "Content-Type: application/x-www-form-urlencoded" -X POST http://localhost:8080/start`
 
 
-Чтобы все очистить придется руками удалить используемые контейнеры и volumes. 
+Чтобы все очистить и создать новую БД придется руками удалить используемые контейнеры и volumes. 
 ---
 
 # мини-игра грузчики
