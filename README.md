@@ -16,10 +16,15 @@ make customer_login
 make generate_tasks
 
 Все остальные запросы пока что отправляются в ручную, нужно подставлять токены, полученные при авторизации:
+
+получить информацию о себе:
 curl -H "Authorization: Bearer <user_token>" -X GET http://localhost:8080/me
+
+получить информацию о заказах:
 curl -H "Authorization: Bearer <user_token>" -X GET http://localhost:8080/tasks
 
 
+начать игру заказчиком, loaders - список id выбранных грузчиков:
 curl -d "loaders=1,2,3" -H "Authorization: Bearer <customer_token>" -H "Content-Type: application/x-www-form-urlencoded" -X POST http://localhost:8080/start
 
 ```
