@@ -20,6 +20,7 @@ type Response struct {
 	Weight		int				`json:"weight,omitempty"`
 	Fatigue		int				`json:"fatigue,omitempty"`
 	Drunk		bool			`json:"drunk,omitempty"`
+	Err			string			`json:"error,omitempty"`
 }
 
 func renderResponse(w http.ResponseWriter, v interface{}) {

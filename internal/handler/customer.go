@@ -108,13 +108,10 @@ func (c *customerHandler) Start(w http.ResponseWriter, req *http.Request) {
 		}
 		loadersID = append(loadersID, int64(v))
 	}
-	rp := Response {
-		Result: "Congratulations!You win!",
-	}
-	_, err = c.service.Start(context.TODO(), loadersID, username, "")
+	var rp Response
+	rp.Result, err = c.service.Start(context.TODO(), loadersID, username, "")
 	if err != nil {
-		rp.Result = "Game failed!"
-		rp.Role = err.Error()
+		rp.Err = err.Error()
 	}
 
 	renderResponse(w, rp)

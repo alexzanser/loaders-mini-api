@@ -22,7 +22,7 @@ const (
 	getCustomerQuery 		= "SELECT id, username, passwd_hash, balance FROM customers WHERE username=$1;"
 	getCustomersListQuery 	= "SELECT id FROM CUSTOMERS;"
 	getTasksQuery    		= "SELECT id, name, weight FROM tasks WHERE customer_id=$1 and completed=false;"
-	customersUpdateQuery	= "UPDATE customers SET balance=balance - $1 WHERE id=$2;"
+	customersUpdateQuery	= "UPDATE customers SET balance=$1 WHERE id=$2;"
 )
 
 

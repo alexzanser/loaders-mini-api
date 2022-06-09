@@ -12,3 +12,7 @@ type Customer struct {
 func NewCustomer() *Customer {
 	return &Customer{}
 }
+
+func (c * Customer) UpdateBalance(cost int) {
+	c.Balance -= cost
+}

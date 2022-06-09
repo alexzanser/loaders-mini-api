@@ -11,10 +11,10 @@ type Loader struct {
 	Passwd			string	`json:"password,omitempty"`
 	PasswdHash		string	`json:"password_hash,omitempty"`
 	MaxWeight		int
-	Drunk			bool	`json:"drunk,omitempty"`
+	Drunk			bool
 	Fatigue			int		`json:"fatigue,omitempty"`
 	Salary			int
-	Balance			int		`json:"balance,omitempty"`
+	Balance			int
 	CompletedTasks	[]Task
 }
 
@@ -53,10 +53,15 @@ func randomSalary() int {
 	return rand.Intn(MaxSalary - MinSalary) + MinSalary
 }
 
-func (l *Loader) UpdateWeight() {
+func (l *Loader) Update(){
 	drunkAffect := 0
 	if l.Drunk {
 		drunkAffect  += 50 
 	}
-	l.MaxWeight = l.MaxWeight * (100 - l.Fatigue / 100) * (100 - drunkAffect/ 100)
+	l.MaxWeight = l.MaxWeight * (1 - l.Fatigue / 100) * (1 - drunkAffect/ 100)
+	if l.MaxWeight < 0 {
+		l.MaxWeight = 0
+	}
+	l.Balance += l.Salary
+	l.Fatigue += 20
 }

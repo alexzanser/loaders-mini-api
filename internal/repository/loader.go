@@ -20,10 +20,11 @@ func newLoaderRepo(pool *pgxpool.Pool) *loaderRepo {
 
 const (
 	getLoaderQuery 			= "SELECT id, username, passwd_hash, max_weight, drunk, fatigue, salary, balance FROM loaders WHERE username=$1"
-	getCompletedTasksQuery  = "SELECT id, name, weight FROM tasks WHERE id=$1 and completed=true";
+	getCompletedTasksQuery  = `SELECT tasks.id, tasks.name, tasks.weight FROM tasks, loaders  
+									WHERE loaders.id = $1 and tasks.id = ANY (loaders.completed_tasks) and completed=true`;
 	getLoadersListQuery		= "SELECT  id, username, max_weight, salary FROM loaders;"
-	getLoadersFullQuery		= "SELECT id, username, passwd_hash, max_weight, drunk, fatigue, salary, balanceFROM loaders;"
-	loadersUpdateQuery		= "UPDATE loaders SET fatigue=$1, balance=$2, completed_tasks=completed_tasks || $3 WHERE id=$4;"
+	getLoadersFullQuery		= "SELECT id, username, passwd_hash, max_weight, drunk, fatigue, salary, balance FROM loaders;"
+	loadersUpdateQuery		= "UPDATE loaders SET  max_weight = $1, fatigue=$2, balance=$3, completed_tasks=completed_tasks || $4 WHERE id=$5;"
 )
 
 func (c *loaderRepo) GetLoader(ctx context.Context, username, passwd string) (*models.Loader, error) {
@@ -39,7 +40,7 @@ func (c *loaderRepo) GetLoader(ctx context.Context, username, passwd string) (*m
 
 	row := c.pool.QueryRow(ctx, getLoaderQuery, username)
 	if err := row.Scan(&id, &ld.Username, &ld.PasswdHash, &ld.MaxWeight, 
-						&ld.Drunk, &ld.Fatigue, &ld.Salary, &ld.Balance, &ld.CompletedTasks); err != nil {
+						&ld.Drunk, &ld.Fatigue, &ld.Salary, &ld.Balance); err != nil {
 		return nil, fmt.Errorf("error receiving data from database: %w", err)
 	}
 
@@ -57,7 +58,6 @@ func (c *loaderRepo) GetLoader(ctx context.Context, username, passwd string) (*m
 		}
 	   ld.CompletedTasks = append(ld.CompletedTasks, t)
 	}
-
 	if err := rows.Err(); err != nil {
 		return nil, fmt.Errorf("error receiving data from database: %w", err)
 	}
@@ -159,7 +159,7 @@ func (t *loaderRepo) UpdateLoader(ctx context.Context, ld *models.Loader) (error
 	for _, val := range ld.CompletedTasks {
 		completedID = append(completedID, val.ID)
 	}
-	res, err := tx.Exec(ctx, loadersUpdateQuery, ld.Fatigue + 20, ld.Balance + ld.Salary, completedID, ld.ID)
+	res, err := tx.Exec(ctx, loadersUpdateQuery, ld.MaxWeight, ld.Fatigue, ld.Balance, completedID, ld.ID)
 	if err != nil {
 		return fmt.Errorf("error adding data to database: %w", err)
 	}

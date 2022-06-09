@@ -16,7 +16,7 @@ type Tasker interface {
 }
 
 type Customer interface {
-	Start(ctx context.Context, loadersID []int64, username, passwd string) (bool, error) 
+	Start(ctx context.Context, loadersID []int64, username, passwd string) (string, error)
 }
 
 func NewService(repo *repository.Repository) *Service {
