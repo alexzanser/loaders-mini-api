@@ -21,6 +21,8 @@ customer_register:
 customer_login:
 		curl -d "username=JackBlack&password=1234&role=customer&balance=1000000" -H "Content-Type: application/x-www-form-urlencoded" -X POST http://localhost:8080/login
 
+generate_tasks:
+		curl -X POST http://localhost:8080/tasks
 
 stop:
 		docker-compose stop
