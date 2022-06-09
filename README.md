@@ -4,26 +4,27 @@
 make build
 
 Зарегистрировать заказчика и залогиниться:  
-make customer_register  
-make customer_login
+    make customer_register  
+    make customer_login
 
 Зарегистрировать три грузчика и залогиниться ими:  
-make loaders_register  
-make loaders_login
+    make loaders_register  
+    make loaders_login
 
 Создать случайны набор заказов для каждого заказчика:  
-make generate_tasks
+    make generate_tasks
 
-Все остальные запросы пока что отправляются в ручную, нужно подставлять токены, полученные при авторизации:  
+Все остальные запросы пока что отправляются в ручную, нужно подставлять  
+токены, полученные при авторизации:  
 
-получить информацию о себе:  
-`curl -H "Authorization: Bearer <user_token>" -X GET http://localhost:8080/me`
+ - получить информацию о себе:  
+    `curl -H "Authorization: Bearer <user_token>" -X GET http://localhost:8080/me`
 
-получить информацию о заказах:  
-`curl -H "Authorization: Bearer <user_token>" -X GET http://localhost:8080/tasks`
+ - получить информацию о заказах:  
+    `curl -H "Authorization: Bearer <user_token>" -X GET http://localhost:8080/tasks`
 
-начать игру заказчиком, loaders - список id выбранных грузчиков:  
-`curl -d "loaders=1,2,3" -H "Authorization: Bearer <customer_token>" -H "Content-Type: application/x-www-form-urlencoded" -X POST http://localhost:8080/start`
+ - начать игру заказчиком, loaders - список id выбранных грузчиков:  
+    `curl -d "loaders=1,2,3" -H "Authorization: Bearer <customer_token>" -H "Content-Type: application/x-www-form-urlencoded" -X POST http://localhost:8080/start`
 
 Мини-игра грузчики.
 Есть заказчик, есть грузчики. Заказчику необходимо переносить тяжелые грузы. 
