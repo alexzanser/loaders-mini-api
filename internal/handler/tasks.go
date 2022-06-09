@@ -4,10 +4,11 @@ import (
 	"context"
 	"encoding/binary"
 	"fmt"
-	"log"
 	"loaders/internal/service"
+	"log"
 	"net/http"
 )
+
 type tasksHandler struct {
 	service *service.Service
 }
@@ -23,7 +24,7 @@ func (t *tasksHandler) GenerateRandomTasks(w http.ResponseWriter, req *http.Requ
 
 	id, err := t.service.GenerateRandomTasks(context.TODO())
 	if err != nil {
-		http.Error(w, fmt.Sprintf(`{"error": "%v"}`, err.Error()), http.StatusBadRequest)
+		http.Error(w, fmt.Sprintf(`{"error": "can't generate new tasklist": "%v"}`, err.Error()), http.StatusBadRequest)
 		return
 	}
 
@@ -31,6 +32,6 @@ func (t *tasksHandler) GenerateRandomTasks(w http.ResponseWriter, req *http.Requ
 	for _, val := range id {
 		binary.LittleEndian.PutUint64(b, uint64(val))
 	}
-	renderResponse(w, Response{Result: fmt.Sprintf("new tasklist created"),
-							HttpStatus: http.StatusCreated,})
+	renderResponse(w, response{Result: fmt.Sprintf("new tasklist created"),
+		HTTPStatus: http.StatusCreated})
 }

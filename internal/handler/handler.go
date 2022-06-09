@@ -15,7 +15,7 @@ type handler struct {
 	loaderHandler			*loaderHandler
 }
 
-func NewHandler(service *service.Service) *handler {
+func newHandler(service *service.Service) *handler {
 	return &handler{
 		customerHandler:		newCustomerHandler(service),
 		loaderHandler:			newLoaderHandler(service),
@@ -26,6 +26,7 @@ func NewHandler(service *service.Service) *handler {
 	}
 }
 
+//После авторизации выбираем handler заказчика или грузчика для обработки запроса (?)
 func (h *handler) GetUser(w http.ResponseWriter, req *http.Request ) {
 	role, _ := req.Context().Value("role").(string)
 	if role == "loader" {
@@ -38,6 +39,7 @@ func (h *handler) GetUser(w http.ResponseWriter, req *http.Request ) {
 	}
 }
 
+//После авторизации выбираем handler заказчика или грузчика для обработки запроса (?)
 func (h *handler) GetTasks(w http.ResponseWriter, req *http.Request ) {
 	role, _ := req.Context().Value("role").(string)
 	if role == "loader" {

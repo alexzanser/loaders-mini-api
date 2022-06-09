@@ -1,10 +1,10 @@
 package handler
 
 import (
-	"loaders/internal/service"
-	"net/http"
 	"fmt"
+	"loaders/internal/service"
 	"log"
+	"net/http"
 )
 
 type loaderHandler struct {
@@ -20,24 +20,25 @@ func (c *loaderHandler) GetLoader(w http.ResponseWriter, req *http.Request) {
 
 	username, ok := req.Context().Value("username").(string)
 	if ok == false {
-		http.Error(w, fmt.Sprintf("can't retreive username from context"), http.StatusBadRequest)
-		return
-	}
-	passwd := req.PostFormValue("password")
-	ld, err := c.service.GetLoader(req.Context(), username, passwd)
-	if err != nil {
-		http.Error(w, fmt.Sprintf("error when get loader :%v", err), http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf(`"error": "can't retrieve username from context"}`), http.StatusBadRequest)
 		return
 	}
 
-	rp := Response {
-		Username:	ld.Username,
-		Role: 		"loader",
-		Balance: 	ld.Balance,
-		Salary: 	ld.Salary,	
-		Weight: 	ld.MaxWeight,
-		Drunk: 		ld.Drunk,
-		Fatigue: 	ld.Fatigue,	
+	passwd := req.PostFormValue("password")
+	ld, err := c.service.GetLoader(req.Context(), username, passwd)
+	if err != nil {
+		http.Error(w, fmt.Sprintf(`"error": "can't get loader": "%v"}`, err), http.StatusInternalServerError)
+		return
+	}
+
+	rp := response{
+		Username: ld.Username,
+		Role:     "loader",
+		Balance:  ld.Balance,
+		Salary:   ld.Salary,
+		Weight:   ld.MaxWeight,
+		Drunk:    ld.Drunk,
+		Fatigue:  ld.Fatigue,
 	}
 
 	renderResponse(w, rp)
@@ -48,20 +49,21 @@ func (c *loaderHandler) GetLoaderTasks(w http.ResponseWriter, req *http.Request)
 
 	username, ok := req.Context().Value("username").(string)
 	if ok == false {
-		http.Error(w, fmt.Sprintf("can't retreive username from context"), http.StatusBadRequest)
-		return
-	}
-	passwd := req.PostFormValue("password")
-	ld, err := c.service.GetLoader(req.Context(), username, passwd)
-	if err != nil {
-		http.Error(w, fmt.Sprintf("error when get loader :%v", err), http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf(`"error": "can't retrieve username from context"}`), http.StatusBadRequest)
 		return
 	}
 
-	rp := Response {
-		Username:	ld.Username,
-		Role: 		"loader",
-		Tasks: 		ld.CompletedTasks,
+	passwd := req.PostFormValue("password")
+	ld, err := c.service.GetLoader(req.Context(), username, passwd)
+	if err != nil {
+		http.Error(w, fmt.Sprintf(`"error": "can't get loader": "%v"}`, err), http.StatusInternalServerError)
+		return
+	}
+
+	rp := response{
+		Username: ld.Username,
+		Role:     "loader",
+		Tasks:    ld.CompletedTasks,
 	}
 
 	renderResponse(w, rp)

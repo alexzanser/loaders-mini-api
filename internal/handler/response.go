@@ -6,9 +6,9 @@ import (
 	"net/http"
 )
 
-type Response struct {
+type response struct {
 	Result 		string 			`json:"result,omitempty"`
-	HttpStatus 	int 			`json:"status_code,omitempty"`
+	HTTPStatus 	int 			`json:"status_code,omitempty"`
 	ID			int64			`json:"id,omitempty"`
 	Username	string			`json:"username,omitempty"`
 	Role		string			`json:"role,omitempty"`

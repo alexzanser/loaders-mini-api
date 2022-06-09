@@ -15,18 +15,20 @@ func formToCustomerRegister(ct *models.Customer, req *http.Request) error {
 
 	b, err := strconv.Atoi(req.PostFormValue("balance"))
 	if err != nil {
-		return fmt.Errorf("error when create customer: %v", err)
+		return fmt.Errorf("can't create customer: invalid customer balance: %v", err)
 	}
+	
 	ct.Balance = b
 
 	if ct.Username == "" || ct.Passwd == "" || ct.Balance <= 0 {
-		return fmt.Errorf("error when create customer: ivalid arguments")
+		return fmt.Errorf("can't create customer: ivalid arguments")
 	}
 
 	hashBytes, err := bcrypt.GenerateFromPassword([]byte(ct.Passwd), 10)
 	if err != nil {
-		return fmt.Errorf("error when create customer: %v", err)
+		return fmt.Errorf("can't create customer: can't generate hash from password: %v", err)
 	}
+
 	ct.PasswdHash = string(hashBytes)
 
 	return nil
@@ -37,13 +39,14 @@ func formToLoaderRegister(ld *models.Loader, req *http.Request) error {
 	ld.Passwd = req.PostFormValue("password")
 
 	if ld.Username == "" || ld.Passwd == "" {
-		return fmt.Errorf("error when create customer: ivalid arguments")
+		return fmt.Errorf("can't create loader: ivalid arguments")
 	}
 
 	hashBytes, err := bcrypt.GenerateFromPassword([]byte(ld.Passwd), 10)
 	if err != nil {
-		return fmt.Errorf("error when create customer: %v", err)
+		return fmt.Errorf("can't create loader: can't generate hash from password: %v", err)
 	}
+
 	ld.PasswdHash = string(hashBytes)
 
 	return nil
@@ -55,7 +58,7 @@ func formToLogin(req *http.Request) (string, string, string, error) {
 	role := req.PostFormValue("role")
 
 	if username == "" || passwd == "" || role != "loader" && role != "customer" {
-		return "", "", "", fmt.Errorf("error when login user: ivalid arguments")
+		return "", "", "", fmt.Errorf("can't when login user: ivalid arguments")
 	}
 
 	return username, passwd, role, nil

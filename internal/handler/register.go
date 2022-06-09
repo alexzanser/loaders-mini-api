@@ -22,13 +22,13 @@ func (a *registerHandler) Register(w http.ResponseWriter, req *http.Request) {
 
 	err := req.ParseForm()
 	if err != nil {
-		http.Error(w, fmt.Sprintf(`{"error": "%v"}`, err.Error()), http.StatusBadRequest)
+		http.Error(w, fmt.Sprintf(`{"error": "can't register user": "%v"}`, err.Error()), http.StatusBadRequest)
 		return
 	}
 
 	role := req.PostFormValue("role")
 	if role != "customer" && role != "loader" {
-		http.Error(w, fmt.Sprintf(`{"error": "invalid role"}`), http.StatusBadRequest)
+		http.Error(w, fmt.Sprintf(`{"error": "can't register user": "invalid role"}`), http.StatusBadRequest)
 		return
 	}
 
@@ -52,10 +52,10 @@ func (a *registerHandler) Register(w http.ResponseWriter, req *http.Request) {
 	}
 
 	if err != nil {
-		http.Error(w, fmt.Sprintf(`{"error": "%v"}`, err.Error()), http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf(`{"error": "can't register user": "%v"}`, err.Error()), http.StatusInternalServerError)
 		return
 	}
 
-	renderResponse(w, Response{Result: fmt.Sprintf("new user with role %s and id %d created", role, id),
-								HttpStatus: http.StatusCreated,})
+	renderResponse(w, response{Result: fmt.Sprintf("new user with role %s and id %d created", role, id),
+		HTTPStatus: http.StatusCreated})
 }

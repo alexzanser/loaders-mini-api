@@ -28,31 +28,31 @@ func (l *loginHandler) Login(w http.ResponseWriter, req *http.Request) {
 
 	err := req.ParseForm()
 	if err != nil {
-		http.Error(w, fmt.Sprintf(`{"error": "%v"}`, err.Error()), http.StatusBadRequest)
+		http.Error(w, fmt.Sprintf(`{"error": "can't parse request": "%v"}`, err.Error()), http.StatusBadRequest)
 		return
 	}
 
 	username, passwd, role, err := formToLogin(req)
 	if err != nil {
-		http.Error(w, fmt.Sprintf(`{"error": "%v"}`, err.Error()), http.StatusBadRequest)
+		http.Error(w, fmt.Sprintf(`{"error": "can't parse request": "%v"}`, err.Error()), http.StatusBadRequest)
 		return
 	}
 
 	token, err := l.GenerateToken(context.TODO(), username, passwd, role)
 	if err != nil {
-		http.Error(w, fmt.Sprintf(`{"error when generate token": "%v"}`, err.Error()), http.StatusBadRequest)
+		http.Error(w, fmt.Sprintf(`{"error": "can't generate token": "%v"}`, err.Error()), http.StatusInternalServerError)
 		return
 	}
 
 	http.SetCookie(w, &http.Cookie{
-		Name:    "token",
-		Value:   token,
+		Name:  "token",
+		Value: token,
 	})
 
-	rp := Response {
-		Token: 		token,
-		Result: 	fmt.Sprintf("user with username %s and role %s authorized", username, role),
-		HttpStatus: http.StatusAccepted,
+	rp := response{
+		Token:      token,
+		Result:     fmt.Sprintf(`{user with username: "%s" and role "%s" authorized}`, username, role),
+		HTTPStatus: http.StatusAccepted,
 	}
 	renderResponse(w, rp)
 }
@@ -63,7 +63,7 @@ func (l *loginHandler) GenerateToken(ctx context.Context, username, passwd, role
 	if role == "customer" {
 		user, err := l.service.GetCustomer(ctx, username, passwd)
 		if err != nil {
-			return "", fmt.Errorf("error when generate token: %v", err)
+			return "", fmt.Errorf("can't get customer: %v", err)
 		}
 		passwdHash = user.PasswdHash
 	}
@@ -71,27 +71,27 @@ func (l *loginHandler) GenerateToken(ctx context.Context, username, passwd, role
 	if role == "loader" {
 		user, err := l.service.GetLoader(ctx, username, passwd)
 		if err != nil {
-			return "", fmt.Errorf("error when generate token: %v", err)
+			return "", fmt.Errorf("can't get loader: %v", err)
 		}
 		passwdHash = user.PasswdHash
 	}
-	
+
 	type Claims struct {
 		jwt.StandardClaims
-		Username	string
-		PasswdHash	string
-		Role		string
+		Username   string
+		PasswdHash string
+		Role       string
 	}
 
 	expire := time.Now().Add(time.Hour)
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &Claims{
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: jwt.At(expire),
-			IssuedAt: jwt.At(time.Now()),
+			IssuedAt:  jwt.At(time.Now()),
 		},
-		Username: username,
-		PasswdHash:	passwdHash,
-		Role:	role,
+		Username:   username,
+		PasswdHash: passwdHash,
+		Role:       role,
 	})
 
 	return token.SignedString([]byte(signingKey))
