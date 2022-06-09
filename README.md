@@ -3,9 +3,11 @@
 Запуск:  
 make build
 
-Зарегистрировать заказчика и залогиниться:  
+Зарегистрировать заказчика и залогиниться: 
+``` 
     make customer_register  
     make customer_login
+```bash
 
 Зарегистрировать три грузчика и залогиниться ими:  
     make loaders_register  
